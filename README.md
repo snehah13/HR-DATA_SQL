@@ -81,6 +81,10 @@ SELECT department_id, department_name
 FROM departments
 WHERE department_id IN (
     SELECT department_id
+
+**Author:** Sneha H  
+**Dataset Source:** [https://livesql.oracle.com/ords/f?p=590:1000:1965933137343:::::]  
+**License:** MIT
     FROM employees
     GROUP BY department_id
 
