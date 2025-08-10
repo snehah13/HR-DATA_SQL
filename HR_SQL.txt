@@ -1,0 +1,94 @@
+select * FROM HR.EMPLOYEES;
+SELECT employee_id, first_name, last_name, salary
+FROM HR.employees
+WHERE department_id = 90
+ORDER BY salary DESC;
+
+
+SELECT department_id, COUNT(*) AS total_employees
+FROM Hr.employees
+GROUP BY department_id
+ORDER BY total_employees DESC;
+
+INNER JOIN------
+SELECT e.employee_id, e.first_name, e.last_name, d.department_name
+FROM HR.employees e
+INNER JOIN HR.departments d
+ON e.department_id = d.department_id;
+
+LEFT JOIN----------
+SELECT d.department_id, d.department_name, e.first_name, e.last_name
+FROM HR.departments d
+LEFT JOIN HR.employees e
+ON d.department_id = e.department_id
+ORDER BY d.department_id;
+
+RIGHT JOIN---------
+SELECT d.department_id, d.department_name, e.first_name, e.last_name
+FROM HR.departments d
+RIGHT JOIN HR.employees e
+ON d.department_id = e.department_id;
+
+SUBQUERY-------------------
+SELECT employee_id, first_name, last_name, salary
+FROM HR.employees
+WHERE salary > (
+    SELECT AVG(salary)
+    FROM HR.employees
+);
+
+SELECT department_id, department_name
+FROM HR.departments
+WHERE department_id IN (
+    SELECT department_id
+    FROM HR.employees
+    GROUP BY department_id
+    HAVING MAX(salary) > 12000
+);
+
+3rd high salary--------
+select max(salary) from HR.EMPLOYEES where 
+    salary<(select max(salary) from HR.EMPLOYEES where 
+    salary<(select max(salary) from HR.EMPLOYEES));
+
+ Total salary paid per department---------------
+SELECT department_id, SUM(salary) AS total_salary
+FROM HR.employees
+GROUP BY department_id
+ORDER BY total_salary DESC;
+
+ Average salary per job role----------------
+SELECT job_id, AVG(salary) AS avg_salary
+FROM HR.employees
+GROUP BY job_id
+ORDER BY avg_salary DESC;
+
+VIEW----------------
+-- 10. Create a view of high earners
+CREATE OR REPLACE VIEW high_earners AS
+SELECT employee_id, first_name, last_name, salary, department_id
+FROM HR.employees
+WHERE salary > 15000;
+
+Query the view
+SELECT * FROM high_earners ORDER BY salary DESC;
+
+INDEXES-------------
+CREATE INDEX idx_salary ON HR.employees(salary);
+CREATE INDEX idx_dept_job ON employees(department_id, job_id);
+
+
+for optimizing or to check performance---------------
+EXPLAIN PLAN FOR
+SELECT employee_id, first_name, last_name, salary
+FROM HR.employees
+WHERE department_id = 90;
+SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);
+
+
+IMP:
+Optimization tips:
+ 1. Filter with indexed columns (PK/FK)
+ 2. Avoid SELECT * in production queries
+ 3. Use ROWNUM or FETCH FIRST N ROWS for testing
+ 4. Limit joins to necessary columns
